@@ -47,8 +47,9 @@ jobs:
                       echo "No tests to run, exiting early!"
                       circleci-agent step halt
                   fi
+            - run: cp test_preparation/generated_config.yml test_preparation/generated_config.txt
             - store_artifacts:
-                  path: test_preparation/generated_config.yml
+                  path: test_preparation/generated_config.txt
             - continuation/continue:
                   configuration_path: test_preparation/generated_config.yml
 

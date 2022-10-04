@@ -35,6 +35,7 @@ from ...modeling_tf_utils import (
     TFCausalLanguageModelingLoss,
     TFModelInputType,
     TFPreTrainedModel,
+    get_initializer,
     keras_serializable,
     unpack_inputs,
 )
@@ -1051,7 +1052,12 @@ class TFBartMainLayer(tf.keras.layers.Layer):
     def __init__(self, config: BartConfig, load_weight_prefix=None, **kwargs):
         super().__init__(**kwargs)
         self.config = config
-        self.shared = tf.keras.layers.Embedding(config.vocab_size, config.d_model, name="model.shared")
+        self.shared = tf.keras.layers.Embedding(
+            input_dim=config.vocab_size,
+            output_dim=config.d_model,
+            embeddings_initializer=get_initializer(config.d_model**-0.5),
+            name="model.shared"
+        )
         # Additional attribute to specify the expected name scope of the layer (for loading/storing weights)
         self.shared.load_weight_prefix = "model.shared" if load_weight_prefix is None else load_weight_prefix
 
